@@ -1,4 +1,4 @@
-http://kite.servcp.com {
+kite.servcp.com {
   reverse_proxy /phpmyadmin/* phpmyadmin:80
   reverse_proxy /ws/* python:8000
   reverse_proxy nginx:80
