@@ -4,6 +4,5 @@ kite.servcp.com {
   reverse_proxy nginx:80
 
   encode gzip
-
   tls admin@servcp.com
 }
