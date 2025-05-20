@@ -4,5 +4,5 @@ kite.servcp.com {
   reverse_proxy nginx:80
 
   encode gzip
-  tls internal  # or remove this line if you want automatic real SSL
+ # tls internal  
 }
