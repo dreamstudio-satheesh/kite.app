@@ -1,0 +1,6 @@
+http://localhost {
+  reverse_proxy /phpmyadmin/* phpmyadmin:80
+  reverse_proxy /ws/* python:8000
+  reverse_proxy nginx:80
+  encode gzip
+}
