@@ -55,7 +55,6 @@ services:
     ports:
       - "8080:8000"
 
-  services:
     caddy:
       image: caddy:alpine
       container_name: caddy
