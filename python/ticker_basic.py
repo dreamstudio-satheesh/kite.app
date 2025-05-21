@@ -3,7 +3,7 @@ import time
 from kiteconnect import KiteTicker
 
 api_key = "fwl8jd4xcan3r27d"
-access_token = ""
+access_token = "8DOFnN5Ahrsf8jQ6xhc7ddsmuExlkTH5"
 
 # Hardcoded token for RELIANCE (example)
 tokens = [408065]  # Replace with your desired token(s)
