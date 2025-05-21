@@ -1,5 +1,7 @@
 FROM php:8.3-fpm-alpine
 
+FROM php:8.3-fpm-alpine
+
 RUN apk add --no-cache \
     bash \
     git \
@@ -11,7 +13,8 @@ RUN apk add --no-cache \
     zip \
     unzip \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
-  && docker-php-ext-install pdo pdo_mysql gd
+  && docker-php-ext-install pdo pdo_mysql gd pcntl
+
 
 WORKDIR /var/www/html
 
