@@ -1,10 +1,11 @@
-
 services:
   php:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: php
+    volumes:
+      - ./backend:/var/www/html
     environment:
       DB_HOST: db
       DB_DATABASE: app_db
@@ -27,9 +28,11 @@ services:
       context: ./python
       dockerfile: Dockerfile
     container_name: python
+    volumes:
+      - ./python:/app
     depends_on:
       - redis
-    command: ["python3", "tick_streamer.py"]
+    command: ["python3", "main.py"]
 
   db:
     image: mysql:8
@@ -43,3 +46,13 @@ services:
   redis:
     image: redis:7
     container_name: redis
+    ports:
+      - "6379:6379"
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+    ports:
+      - "8080:80"
