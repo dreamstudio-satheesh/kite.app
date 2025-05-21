@@ -16,7 +16,8 @@ def load_token_map(csv_path="all_equities.csv"):
     with open(csv_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            mapping[row['tradingsymbol'].upper()] = int(row['instrument_token'])
+            key = f"{row['exchange'].upper()}:{row['tradingsymbol'].upper()}"
+            mapping[key] = int(row['instrument_token'])
     return mapping
 
 # Get watched symbols from Redis (Laravel stores only symbols)

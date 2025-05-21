@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Redis;
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ZerodhaAuthController;
@@ -27,4 +26,30 @@ Route::middleware('admin.auth')->group(function () {
         Route::get('/login/{id}', [ZerodhaAuthController::class, 'redirect'])->name('zerodha.login');
         Route::get('/callback', [ZerodhaAuthController::class, 'callback'])->name('zerodha.callback');
     });
+});
+
+
+
+Route::get('/watchlist', function () {
+    $symbols = Redis::smembers("watchlist:symbols");
+    return view('watchlist.index', compact('symbols'));
+});
+
+Route::post('/watchlist/add', function (Request $request) {
+    $symbol = strtoupper($request->input('symbol'));
+    $exchange = strtoupper($request->input('exchange', 'NSE'));
+    $key = "{$exchange}:{$symbol}";
+
+    Redis::sadd("watchlist:symbols", $key);
+    return redirect('/watchlist')->with('success', "$key added.");
+});
+
+Route::post('/watchlist/remove', function (Request $request) {
+    Redis::srem("watchlist:symbols", $request->input('symbol'));
+    return redirect('/watchlist')->with('success', 'Symbol removed.');
+});
+
+Route::post('/watchlist/clear', function () {
+    Redis::del("watchlist:symbols");
+    return redirect('/watchlist')->with('success', 'Watchlist cleared.');
 });

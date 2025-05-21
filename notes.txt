@@ -10,5 +10,7 @@ docker system prune -af --volumes && \
 docker compose build --no-cache && \
 docker compose up -d
 
-system
-o
+docker exec -it php chown -R www-data:www-data /var/www/html/storage
+docker exec -it php chmod -R 775 /var/www/html/storage
+
+http://157.180.84.147:8080/
