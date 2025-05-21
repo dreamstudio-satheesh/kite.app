@@ -29,7 +29,7 @@ services:
     container_name: python
     depends_on:
       - redis
-    command: ["python3", "main.py"]
+    command: ["python3", "tick_streamer.py"]
 
   db:
     image: mysql:8
