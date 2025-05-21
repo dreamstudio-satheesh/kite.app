@@ -6,8 +6,8 @@ services:
     container_name: php
     volumes:
       - ./backend:/var/www/html
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"  # Remove if not needed
     environment:
       DB_HOST: db
       DB_DATABASE: app_db

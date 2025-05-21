@@ -13,6 +13,6 @@ docker compose up -d
 docker exec -it php chown -R www-data:www-data /var/www/html/storage
 docker exec -it php chmod -R 775 /var/www/html/storage
 
-http://157.180.84.147:8080/
+http://157.180.84.147:8090/
 
 ls
