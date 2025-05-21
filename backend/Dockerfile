@@ -21,11 +21,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-RUN sudo chown -R git:git storage bootstrap/cache
-RUN sudo chmod -R 775 storage bootstrap/cache
 
-# RUN chown -R www-data:www-data /var/www/html \
-#     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 
 # USER www-data
