@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Models\WatchlistSymbol;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
@@ -29,31 +30,41 @@ Route::middleware('admin.auth')->group(function () {
     });
 });
 
-
-
 Route::get('/watchlist', function () {
-    $symbols = Redis::smembers("watchlist:symbols");
+    $symbols = WatchlistSymbol::all()->map(function ($row) {
+        return "{$row->exchange}:{$row->symbol}";
+    });
+
     return view('watchlist.index', compact('symbols'));
 });
 
 Route::post('/watchlist/add', function (Request $request) {
     $symbol = strtoupper($request->input('symbol'));
     $exchange = strtoupper($request->input('exchange', 'NSE'));
-    $key = "{$exchange}:{$symbol}";
 
-    Redis::sadd("watchlist:symbols", $key);
-    return redirect('/watchlist')->with('success', "$key added.");
+    WatchlistSymbol::firstOrCreate([
+        'symbol' => $symbol,
+        'exchange' => $exchange,
+    ]);
+
+    return redirect('/watchlist')->with('success', "$exchange:$symbol added.");
 });
 
 Route::post('/watchlist/remove', function (Request $request) {
-    Redis::srem("watchlist:symbols", $request->input('symbol'));
-    return redirect('/watchlist')->with('success', 'Symbol removed.');
+    [$exchange, $symbol] = explode(':', $request->input('symbol'));
+
+    WatchlistSymbol::where('symbol', $symbol)
+        ->where('exchange', $exchange)
+        ->delete();
+
+    return redirect('/watchlist')->with('success', "$exchange:$symbol removed.");
 });
 
 Route::post('/watchlist/clear', function () {
-    Redis::del("watchlist:symbols");
+    WatchlistSymbol::truncate();
     return redirect('/watchlist')->with('success', 'Watchlist cleared.');
 });
+
 
 Route::get('/live-market', function () {
     $symbols = Redis::smembers("watchlist:symbols");
@@ -61,7 +72,3 @@ Route::get('/live-market', function () {
 });
 
 
-Route::get('/redis-test-write', function () {
-    \Illuminate\Support\Facades\Redis::sadd("watchlist:symbols", "NSE:IDEA");
-    return "Added NSE:IDEA to Redis.";
-});

@@ -20,3 +20,11 @@ docker compose up -d --build
 
 
 docker exec -it php cat /var/www/html/.env
+
+
+
+
+
+docker exec -it php bash
+apt update && apt install -y redis-tools
+redis-cli -h redis ping
