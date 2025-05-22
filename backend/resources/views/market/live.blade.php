@@ -28,7 +28,7 @@
 <script>
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    host: "157.180.84.147:8080",
+    host: "157.180.84.147:8010",
     scheme: 'http'
 });
 

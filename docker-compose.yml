@@ -1,4 +1,14 @@
 services:
+
+
+  db:
+    image: mysql:8
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: app_db
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
   php:
     build:
       context: ./backend
@@ -7,7 +17,9 @@ services:
     volumes:
       - ./backend:/var/www/html
     ports:
-      - "8080:8080"  # Remove if not needed
+      - "8010:8080"  # Remove if not needed
+    depends_on:
+      - db
     environment:
       DB_HOST: db
       DB_DATABASE: app_db
@@ -36,14 +48,7 @@ services:
       - redis
     command: ["python3", "main.py"]
 
-  db:
-    image: mysql:8
-    container_name: db
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: app_db
-    volumes:
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
 
   redis:
     image: redis:7
