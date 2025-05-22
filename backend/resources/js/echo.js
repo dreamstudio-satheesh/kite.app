@@ -12,3 +12,21 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+window.Echo.channel('market-ticks')
+    .listen('.tick.updated', (data) => {
+        const id = data.symbol;
+        const ltp = data.ltp;
+        const time = new Date(data.time * 1000).toLocaleTimeString();
+
+        const ltpSpan = document.getElementById('ltp-' + id);
+        const timeSpan = document.getElementById('time-' + id);
+        const card = document.getElementById('card-' + id);
+
+        if (ltpSpan) ltpSpan.textContent = ltp;
+        if (timeSpan) timeSpan.textContent = time;
+        if (card) {
+            card.classList.add('bg-light');
+            setTimeout(() => card.classList.remove('bg-light'), 500);
+        }
+    });
