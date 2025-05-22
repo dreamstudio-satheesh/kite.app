@@ -24,35 +24,29 @@
 @endsection
 
 @push('scripts')
-<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
 <script>
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: '{{ config("reverb.key") }}',
-        wsHost: window.location.hostname,
-        wsPort: 8080,
-        forceTLS: false,
-        disableStats: true,
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    host: window.location.hostname + ':8080', // or whatever your Reverb port is
+});
+
+Echo.channel('market-ticks')
+    .listen('.tick.updated', (data) => {
+        const id = data.symbol;
+        const ltp = data.ltp;
+        const time = new Date(data.time * 1000).toLocaleTimeString();
+
+        const ltpSpan = document.getElementById('ltp-' + id);
+        const timeSpan = document.getElementById('time-' + id);
+        const card = document.getElementById('card-' + id);
+
+        if (ltpSpan) ltpSpan.textContent = ltp;
+        if (timeSpan) timeSpan.textContent = time;
+        if (card) {
+            card.classList.add('bg-light');
+            setTimeout(() => card.classList.remove('bg-light'), 500);
+        }
     });
-
-    Echo.channel('market-ticks')
-        .listen('.tick.updated', (data) => {
-            const id = data.symbol;
-            const ltp = data.ltp;
-            const time = new Date(data.time * 1000).toLocaleTimeString();
-
-            const ltpSpan = document.getElementById('ltp-' + id);
-            const timeSpan = document.getElementById('time-' + id);
-            const card = document.getElementById('card-' + id);
-
-            // Add null checks
-            if (ltpSpan) ltpSpan.textContent = ltp;
-            if (timeSpan) timeSpan.textContent = time;
-            if (card) {
-                card.classList.add('bg-light');
-                setTimeout(() => card.classList.remove('bg-light'), 500);
-            }
-        });
 </script>
 @endpush
