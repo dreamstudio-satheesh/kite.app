@@ -67,8 +67,15 @@ Route::post('/watchlist/clear', function () {
 
 
 Route::get('/live-market', function () {
-    $symbols = Redis::smembers("watchlist:symbols");
+    $symbols = WatchlistSymbol::all()->map(function ($row) {
+        return "{$row->exchange}:{$row->symbol}";
+    });
+
     return view('market.live', compact('symbols'));
 });
 
-
+Route::get('/watchlist-symbols', function () {
+    return WatchlistSymbol::all()->map(function ($item) {
+        return "{$item->exchange}:{$item->symbol}";
+    })->values();
+});
