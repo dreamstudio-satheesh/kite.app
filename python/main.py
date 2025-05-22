@@ -2,12 +2,13 @@ import csv
 import json
 import time
 import redis
+import requests
 from kiteconnect import KiteTicker
 
 api_key = "fwl8jd4xcan3r27d"
-access_token = "WeaP2sLqLqG29hk73vHvKZWyo02wlFol"
+access_token = "WeaP2sLqLqG29hk73vHvKZWyo02wlFols"
 
-# Redis
+# Redis for tick publishing
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
 
 # Load symbol-token mapping
@@ -20,21 +21,30 @@ def load_token_map(csv_path="all_equities.csv"):
             mapping[key] = int(row['instrument_token'])
     return mapping
 
-# Get watched symbols from Redis (Laravel stores only symbols)
-def get_symbols_from_redis():
-    return r.smembers("watchlist:symbols")  # Set of symbols like RELIANCE, TCS, etc.
+# Get watched symbols via HTTP from Laravel
+def get_symbols_from_http():
+    try:
+        response = requests.get("http://php:8010/watchlist-symbols", timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print("Error fetching symbols:", e)
+        return []
 
 # Convert symbols → tokens
 def get_tokens():
     token_map = load_token_map()
-    symbols = get_symbols_from_redis()
+    symbols = get_symbols_from_http()
     tokens = []
     for sym in symbols:
         token = token_map.get(sym.upper())
         if token:
             tokens.append(token)
+        else:
+            print(f"[WARN] Token not found for symbol: {sym}")
     return tokens
 
+# Get tokens at startup
 tokens = get_tokens()
 print(f"Subscribing to tokens: {tokens}")
 
