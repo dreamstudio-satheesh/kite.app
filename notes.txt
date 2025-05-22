@@ -17,3 +17,6 @@ http://157.180.84.147:8090/
 
 
 docker compose up -d --build
+
+
+docker exec -it php cat /var/www/html/.env
