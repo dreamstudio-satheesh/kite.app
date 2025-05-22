@@ -13,7 +13,7 @@ class RedisTickListener extends Command
 
     public function handle()
     {
-        $this->info('Listening to Redis "ticks" channel...');
+       // $this->info('Listening to Redis "ticks" channel...');
         Redis::subscribe(['ticks'], function ($message) {
             $tick = json_decode($message, true);
 
