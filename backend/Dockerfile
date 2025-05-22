@@ -29,7 +29,10 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copy Supervisor config
-COPY supervisord.conf /etc/supervisord.conf
+# COPY supervisord.conf /etc/supervisord.conf
 
-# Start Supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# # Start Supervisor
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+
+# Start php-fpm only (default CMD for php:8.3-fpm, but explicit is better)
+CMD ["php-fpm"]
