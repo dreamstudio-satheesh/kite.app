@@ -1,30 +1,8 @@
 {
-  "_echo-BO27QKH_.js": {
-    "file": "assets/echo-BO27QKH_.js",
-    "name": "echo"
-  },
-  "resources/css/app.css": {
-    "file": "assets/app-l0sNRNKZ.js",
-    "name": "app",
-    "src": "resources/css/app.css",
-    "isEntry": true
-  },
-  "resources/js/app.js": {
-    "file": "assets/app-DHxT9m3_.js",
-    "name": "app",
-    "src": "resources/js/app.js",
-    "isEntry": true,
-    "imports": [
-      "_echo-BO27QKH_.js"
-    ]
-  },
   "resources/js/echo.js": {
-    "file": "assets/echo-CTF8lG33.js",
+    "file": "assets/echo-RJ61Bqmb.js",
     "name": "echo",
     "src": "resources/js/echo.js",
-    "isEntry": true,
-    "imports": [
-      "_echo-BO27QKH_.js"
-    ]
+    "isEntry": true
   }
 }
