@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             AdminSettingSeeder::class,
+            ZerodhaAccountsTableSeeder::class,
         ]);
     }
 }
