@@ -24,9 +24,8 @@
 @endsection
 
 @push('scripts')
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1/dist/echo.iife.js"></script>
-<script src="https://js.pusher.com/beams/7.0/pusher.min.js"></script>
-
 <script>
     window.Echo = new Echo({
         broadcaster: 'pusher',
@@ -43,13 +42,17 @@
             const ltp = data.ltp;
             const time = new Date(data.time * 1000).toLocaleTimeString();
 
-            document.getElementById('ltp-' + id).textContent = ltp;
-            document.getElementById('time-' + id).textContent = time;
-
-            // Optional: color flash effect
+            const ltpSpan = document.getElementById('ltp-' + id);
+            const timeSpan = document.getElementById('time-' + id);
             const card = document.getElementById('card-' + id);
-            card.classList.add('bg-light');
-            setTimeout(() => card.classList.remove('bg-light'), 500);
+
+            // Add null checks
+            if (ltpSpan) ltpSpan.textContent = ltp;
+            if (timeSpan) timeSpan.textContent = time;
+            if (card) {
+                card.classList.add('bg-light');
+                setTimeout(() => card.classList.remove('bg-light'), 500);
+            }
         });
 </script>
 @endpush
