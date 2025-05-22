@@ -59,3 +59,9 @@ Route::get('/live-market', function () {
     $symbols = Redis::smembers("watchlist:symbols");
     return view('market.live', compact('symbols'));
 });
+
+
+Route::get('/redis-test-write', function () {
+    \Illuminate\Support\Facades\Redis::sadd("watchlist:symbols", "NSE:IDEA");
+    return "Added NSE:IDEA to Redis.";
+});
