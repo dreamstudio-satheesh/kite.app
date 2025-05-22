@@ -24,5 +24,39 @@
 @endsection
 
 @push('scripts')
-@vite('resources/js/echo.js') 
+<!-- Include Pusher -->
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+<!-- Echo Configuration -->
+<script>
+    window.Pusher = Pusher;
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: '{{ env("PUSHER_APP_KEY") }}',
+        cluster: '{{ env("PUSHER_APP_CLUSTER") }}',
+        encrypted: true,
+        forceTLS: true
+    });
+
+    window.Echo.channel('market-ticks')
+        .listen('.tick.updated', function (e) {
+            const symbol = e.symbol;
+            const price = e.data.last_price;
+            const time = new Date(e.data.timestamp).toLocaleTimeString();
+
+            const ltpEl = document.getElementById(`ltp-${symbol}`);
+            const timeEl = document.getElementById(`time-${symbol}`);
+            const cardEl = document.getElementById(`card-${symbol}`);
+
+            if (ltpEl) ltpEl.innerText = price;
+            if (timeEl) timeEl.innerText = "Updated at " + time;
+
+            // optional flash animation
+            if (cardEl) {
+                cardEl.classList.add('border', 'border-success');
+                setTimeout(() => cardEl.classList.remove('border', 'border-success'), 500);
+            }
+        });
+</script>
 @endpush
