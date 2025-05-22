@@ -4,8 +4,8 @@ import time
 import redis
 from kiteconnect import KiteTicker
 
-api_key = "your_api_key"
-access_token = "your_access_token"
+api_key = "fwl8jd4xcan3r27d"
+access_token = "WeaP2sLqLqG29hk73vHvKZWyo02wlFol"
 
 # Redis
 r = redis.Redis(host='redis', port=6379, decode_responses=True)
