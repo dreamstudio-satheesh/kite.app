@@ -28,7 +28,8 @@
 <script>
 window.Echo = new Echo({
     broadcaster: 'reverb',
-    host: window.location.hostname + ':8080', // or whatever your Reverb port is
+    host: "157.180.84.147:8080",
+    scheme: 'http'
 });
 
 Echo.channel('market-ticks')
