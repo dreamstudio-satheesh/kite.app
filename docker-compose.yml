@@ -17,7 +17,7 @@ services:
     volumes:
       - ./backend:/var/www/html
     ports:
-      - "8010:8080"  # Remove if not needed
+      - "8010:8010"  # Remove if not needed
     depends_on:
       - db
     environment:
