@@ -55,7 +55,7 @@ Route::post('/watchlist/clear', function () {
     return redirect('/watchlist')->with('success', 'Watchlist cleared.');
 });
 
-Route::get('/market/live', function () {
+Route::get('/live-market', function () {
     $symbols = Redis::smembers("watchlist:symbols");
     return view('market.live', compact('symbols'));
 });
