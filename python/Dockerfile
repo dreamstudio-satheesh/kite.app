@@ -5,4 +5,4 @@ COPY . .
 
 RUN pip install redis kiteconnect
 
-CMD ["python", "main.py"]
+CMD ["python", "tick_streamer.py"]
