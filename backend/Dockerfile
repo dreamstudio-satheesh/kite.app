@@ -23,7 +23,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # Install Composer from official image
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer  # <–– THIS LINE WAS MISSING
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install dependencies (skip scripts)
 RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader
