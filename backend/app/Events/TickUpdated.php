@@ -49,8 +49,8 @@ class TickUpdated implements ShouldBroadcast
     {
         return [
             'symbol' => $this->symbol,
-            'ltp'    => $this->data['last_price'],
-            'time'   => $this->data['timestamp'],
+            'ltp'    => $this->data['last_price'] ?? 0, // Default to 0 if missing
+            'time'   => $this->data['timestamp'] ?? now()->timestamp,
         ];
     }
 }
