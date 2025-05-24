@@ -22,13 +22,16 @@ WORKDIR /var/www/html
 # Copy Composer files first (for caching)
 COPY composer.json composer.lock ./
 
-# Install Composer dependencies (skip scripts)
+# Install Composer from official image
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer  # <–– THIS LINE WAS MISSING
+
+# Install dependencies (skip scripts)
 RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader
 
 # Copy the entire app code (including artisan)
 COPY . .
 
-# Now run post-install scripts (artisan is available)
+# Run post-install scripts
 RUN composer run-script post-autoload-dump
 
 # Set permissions
