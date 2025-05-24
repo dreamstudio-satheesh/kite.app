@@ -8,11 +8,11 @@ This document defines the full requirements for a Zerodha Trading Admin Panel de
 
 The stack includes:
 
-* **Backend**: Laravel 11
+* **Backend**: Laravel 
 * **WebSocket Engine**: Python + Redis (for tick streaming)
 * **Database**: MySQL
 * **Frontend**: Blade (Velzon theme)
-* **Server**: Docker + Caddy
+* **Server**: Docker + Nginx
 
 ---
 
@@ -127,9 +127,9 @@ The stack includes:
   * redis
   * mysql
   * phpmyadmin
-  * caddy
+  * NGINX
 
-Caddy reverse proxies:
+NGINX reverse proxies:
 
 * `/api/*` → backend
 * `/ws/*` → python
