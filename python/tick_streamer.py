@@ -29,8 +29,8 @@ realistic_prices = {
     "NSE:TATAPOWER": 400
 }
 
-# Load instrument tokens from CSV
-import csv
+
+# Load instrument tokens from CSV (same as before)
 symbol_token_map = {}
 with open("all_equities.csv", newline='') as f:
     reader = csv.DictReader(f)
@@ -39,29 +39,27 @@ with open("all_equities.csv", newline='') as f:
         if sym_key in realistic_prices:
             symbol_token_map[sym_key] = int(row['instrument_token'])
 
-# Initialize current price state
 price_map = realistic_prices.copy()
 
 print("Starting mock ticks...")
 
 try:
     while True:
-        now = datetime.utcnow().isoformat()
-
         for symbol, token in symbol_token_map.items():
             current_price = price_map[symbol]
-            drift_pct = random.uniform(-0.3, 0.3)  # max 0.3% change per tick
+            drift_pct = random.uniform(-0.3, 0.3)
             new_price = round(current_price * (1 + drift_pct / 100), 2)
             price_map[symbol] = new_price
 
+            # Match original data structure
             tick_data = {
-                "ltp": new_price,
-                "time": now
+                "instrument_token": token,
+                "last_price": new_price,
+                "timestamp": time.time()
             }
 
-            redis_key = f"tick:{token}"
-            r.set(redis_key, json.dumps(tick_data))
-            print(f"[{now}] {symbol} → {new_price}")
+            r.publish('ticks', json.dumps(tick_data))  # Use pub/sub
+            print(f"[{datetime.utcnow()}] {symbol} → {new_price}")
 
         time.sleep(1)
 

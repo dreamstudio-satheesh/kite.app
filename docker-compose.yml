@@ -46,7 +46,7 @@ services:
       - ./python:/app
     depends_on:
       - redis
-    command: ["python3", "main.py"]
+    command: ["python3", "tick_streamer.py"]
 
   redis:
     image: redis:7
