@@ -1,8 +1,5 @@
 ssh git@157.180.84.147
 
-35.154.138.242
-157.180.84.147
-
 
 
 docker compose down --volumes --remove-orphans && \
