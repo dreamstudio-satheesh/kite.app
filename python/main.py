@@ -34,6 +34,9 @@ def get_symbols_from_http():
 # Convert symbols → tokens
 def get_tokens():
     token_map = load_token_map()
+    # Create reverse mapping (token → symbol)
+    global token_symbol_map
+    token_symbol_map = {v: k for k, v in token_map.items()}
     symbols = get_symbols_from_http()
     tokens = []
     for sym in symbols:
@@ -52,8 +55,10 @@ kws = KiteTicker(api_key, access_token)
 
 def on_ticks(ws, ticks):
     for tick in ticks:
+        symbol = token_symbol_map.get(tick['instrument_token'], "UNKNOWN")
         data = {
             "instrument_token": tick['instrument_token'],
+            "symbol": symbol,
             "last_price": tick.get('last_price'),
             "timestamp": tick.get('timestamp', time.time())
         }

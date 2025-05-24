@@ -1,8 +1,8 @@
 import redis
 import random
 import json
-import csv
 import time
+import csv
 from datetime import datetime
 
 r = redis.Redis(host="redis", port=6379, decode_responses=True)
@@ -31,7 +31,7 @@ realistic_prices = {
 }
 
 
-# Load instrument tokens from CSV (same as before)
+# Load instrument tokens from CSV
 symbol_token_map = {}
 with open("all_equities.csv", newline='') as f:
     reader = csv.DictReader(f)
@@ -46,23 +46,21 @@ print("Starting mock ticks...")
 
 try:
     while True:
-        for symbol, token in symbol_token_map.items():
+        for symbol, token in symbol_token_map.items():  # symbol is "NSE:TCS"
             current_price = price_map[symbol]
             drift_pct = random.uniform(-0.3, 0.3)
             new_price = round(current_price * (1 + drift_pct / 100), 2)
             price_map[symbol] = new_price
 
-            # Match original data structure
             tick_data = {
                 "instrument_token": token,
+                "symbol": symbol,  # Added symbol
                 "last_price": new_price,
                 "timestamp": time.time()
             }
-
-            r.publish('ticks', json.dumps(tick_data))  # Use pub/sub
+            r.publish('ticks', json.dumps(tick_data))
             print(f"[{datetime.utcnow()}] {symbol} → {new_price}")
 
         time.sleep(1)
-
 except KeyboardInterrupt:
     print("Stopped.")
