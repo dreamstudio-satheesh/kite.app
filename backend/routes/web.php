@@ -79,3 +79,13 @@ Route::get('/watchlist-symbols', function () {
         return "{$item->exchange}:{$item->symbol}";
     })->values();
 });
+
+
+Route::get('/reverb-test', function () {
+    return view('reverb-test');
+});
+
+Route::post('/trigger-event', function () {
+    event(new App\Events\TestEvent(request('message')));
+    return back();
+});
