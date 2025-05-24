@@ -9,11 +9,23 @@ kite.servcp.com {
         }
     }
 
+    # Reverb WebSocket proxy
+    @reverb {
+        header Connection *Upgrade*
+        header Upgrade    websocket
+    }
+    handle @reverb {
+        reverse_proxy reverb:8080 {
+            transport http {
+                tls_insecure_skip_verify
+            }
+        }
+    }
+
     # Python WebSocket proxy
     handle /ws/* {
         reverse_proxy python:8000 {
             transport http {
-                tls
                 tls_insecure_skip_verify
             }
         }

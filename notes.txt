@@ -33,3 +33,16 @@ docker exec -it php cat /var/www/html/.env
 docker exec -it php bash
 apt update && apt install -y redis-tools
 redis-cli -h redis ping
+
+
+# Terminal 1: WebSocket Server
+php artisan reverb:start
+
+# Terminal 2: Redis Listener
+php artisan ticks:listen
+
+# Terminal 3: Mock Data Generator
+python3 streamer.py
+
+# Terminal 4: Frontend
+npm run dev
