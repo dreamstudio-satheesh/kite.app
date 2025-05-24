@@ -1,6 +1,7 @@
+# Use official PHP-FPM image
 FROM php:8.3-fpm
 
-# System dependencies
+# System dependencies and extensions
 RUN apt-get update && apt-get install -y \
     bash \
     git \
@@ -14,25 +15,33 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql gd pcntl \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# Set working directory
 WORKDIR /var/www/html
 
-COPY . .
+# Copy only composer files first (for layer caching)
+COPY composer.json composer.lock ./
 
-# Copy Composer from official container
+# Install Composer from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Install PHP dependencies (exclude dev dependencies)
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
+# Copy application code (after dependencies to leverage caching)
+COPY . .
+
+# Set permissions (adjust paths as needed for your framework)
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache
 
-# Copy Supervisor config
-# COPY supervisord.conf /etc/supervisord.conf
+# Use production PHP configuration
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-# # Start Supervisor
-# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+# Expose PHP-FPM port (default: 9000)
+EXPOSE 9000
 
-# Start php-fpm only (default CMD for php:8.3-fpm, but explicit is better)
+# Start PHP-FPM
 CMD ["php-fpm"]

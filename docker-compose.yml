@@ -9,6 +9,8 @@ services:
       MYSQL_DATABASE: app_db
     volumes:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+      
   php:
     build:
       context: ./backend
@@ -18,10 +20,10 @@ services:
       - web
     volumes:
       - ./backend:/var/www/html
-    ports:
-      - "8010:8010"  # Remove if not needed
+
     depends_on:
       - db
+      - redis
     environment:
       DB_HOST: db
       DB_DATABASE: app_db
@@ -59,8 +61,8 @@ services:
     container_name: redis
     networks:
       - web
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
     volumes:
       - redis_data:/data
 
@@ -76,6 +78,8 @@ services:
 
 volumes:
   redis_data:
+  db_data:
+    driver: local
 
 networks:
   web:
